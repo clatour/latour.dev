@@ -1,8 +1,8 @@
-resource "kubernetes_deployment" "minecraft" {
+resource "kubernetes_deployment" "mcmmo" {
   metadata {
-    name = "minecraft"
+    name = "mcmmo"
     labels = {
-      app = "minecraft"
+      app = "mcmmo"
     }
   }
 
@@ -12,24 +12,25 @@ resource "kubernetes_deployment" "minecraft" {
 
     selector {
       match_labels = {
-        app = "minecraft"
+        app = "mcmmo"
       }
     }
 
     strategy {
       type = "Recreate"
     }
+
     template {
       metadata {
         labels = {
-          app      = "minecraft"
+          app      = "mcmmo"
           app_type = "game"
         }
       }
 
       spec {
         container {
-          name  = "minecraft"
+          name  = "mcmmo"
           image = "${local.docker_registry}/minecraft:latest"
 
 
@@ -47,14 +48,14 @@ resource "kubernetes_deployment" "minecraft" {
 
           volume_mount {
             mount_path = "/opt/minecraft"
-            name       = "minecraft"
+            name       = "mcmmo"
           }
         }
 
         volume {
-          name = "minecraft"
+          name = "mcmmo"
           persistent_volume_claim {
-            claim_name = "minecraft"
+            claim_name = "mcmmo"
           }
         }
 

@@ -1,8 +1,8 @@
-resource "kubernetes_deployment" "minecraft" {
+resource "kubernetes_deployment" "bungee-cord" {
   metadata {
-    name = "minecraft"
+    name = "bungee-cord"
     labels = {
-      app = "minecraft"
+      app = "bungee-cord"
     }
   }
 
@@ -12,34 +12,34 @@ resource "kubernetes_deployment" "minecraft" {
 
     selector {
       match_labels = {
-        app = "minecraft"
+        app = "bungee-cord"
       }
     }
 
     strategy {
       type = "Recreate"
     }
+
     template {
       metadata {
         labels = {
-          app      = "minecraft"
+          app      = "bungee-cord"
           app_type = "game"
         }
       }
 
       spec {
         container {
-          name  = "minecraft"
-          image = "${local.docker_registry}/minecraft:latest"
-
+          name  = "bungee-cord"
+          image = "${local.docker_registry}/bungee-cord:latest"
 
           port {
             container_port = 25565
           }
 
           readiness_probe {
-            initial_delay_seconds = 15
-            period_seconds        = 30
+            initial_delay_seconds = 5
+            period_seconds        = 10
             tcp_socket {
               port = 25565
             }
@@ -47,14 +47,14 @@ resource "kubernetes_deployment" "minecraft" {
 
           volume_mount {
             mount_path = "/opt/minecraft"
-            name       = "minecraft"
+            name       = "bungee-cord"
           }
         }
 
         volume {
-          name = "minecraft"
-          persistent_volume_claim {
-            claim_name = "minecraft"
+          name = "bungee-cord"
+          empty_dir {
+            medium = ""
           }
         }
 

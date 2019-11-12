@@ -7,7 +7,8 @@ resource "kubernetes_deployment" "killing-floor-2" {
   }
 
   spec {
-    replicas = 1
+    replicas               = 1
+    revision_history_limit = 3
 
     selector {
       match_labels = {

@@ -1,11 +1,11 @@
-resource "kubernetes_service" "minecraft" {
+resource "kubernetes_service" "mcmmo" {
   metadata {
-    name = "minecraft"
+    name = "mcmmo"
   }
 
   spec {
     selector = {
-      app = "minecraft"
+      app = "mcmmo"
     }
 
     port {
