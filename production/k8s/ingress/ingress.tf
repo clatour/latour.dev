@@ -3,21 +3,40 @@ resource "kubernetes_ingress" "nginx-ingress" {
     name = "nginx-ingress"
     annotations = {
       "kubernetes.io/ingress.class"                 = "nginx"
-      "certmanager.k8s.io/cluster-issuer"           = "letsencrypt-prod"
-      "nginx.ingress.kubernetes.io/ssl-redirect"    = "false"
-      "nginx.ingress.kubernetes.io/proxy-body-size" = "50m"
+      "nginx.ingress.kubernetes.io/proxy-body-size" = "500m"
     }
   }
 
   spec {
+    # tls {
+    #   hosts = [
+    #     "registry.latour.dev",
+    #     "latour.dev",
+    #     "git.latour.dev",
+    #     "apt.latour.dev",
+    #   ]
+    #   secret_name = "letsencrypt-prod"
+    # }
+
     tls {
       hosts = [
-        "latour.dev",
-        "c.latour.dev",
-        "apt.latour.dev",
+        "clown.engineer",
+      ]
+      secret_name = "clown-crt-secret"
+    }
+
+    tls {
+      hosts = [
+        "registry.latour.dev",
+      ]
+      secret_name = "registry-crt-secret"
+    }
+
+    tls {
+      hosts = [
         "git.latour.dev",
       ]
-      secret_name = "letsencrypt-prod"
+      secret_name = "git-crt-secret"
     }
 
     rule {
@@ -33,24 +52,12 @@ resource "kubernetes_ingress" "nginx-ingress" {
     }
 
     rule {
-      host = "c.latour.dev"
+      host = "clown.engineer"
       http {
         path {
           backend {
-            service_name = "web"
-            service_port = 8080
-          }
-        }
-      }
-    }
-
-    rule {
-      host = "latour.dev"
-      http {
-        path {
-          backend {
-            service_name = "web"
-            service_port = 8080
+            service_name = "clown"
+            service_port = 80
           }
         }
       }
@@ -63,6 +70,18 @@ resource "kubernetes_ingress" "nginx-ingress" {
           backend {
             service_name = "apt-cacher-ng"
             service_port = 3142
+          }
+        }
+      }
+    }
+
+    rule {
+      host = "registry.latour.dev"
+      http {
+        path {
+          backend {
+            service_name = "docker-registry"
+            service_port = 5000
           }
         }
       }

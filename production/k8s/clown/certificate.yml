@@ -1,0 +1,19 @@
+apiVersion: cert-manager.io/v1alpha2
+kind: Certificate
+metadata:
+  name: clown-crt
+spec:
+  secretName: clown-crt-secret
+  dnsNames:
+  - clown.engineer
+  acme:
+    config:
+    - http01:
+        ingressClass: nginx
+      domains:
+      - clown.engineer
+  issuerRef:
+    name: letsencrypt-prod
+    # We can reference ClusterIssuers by changing the kind here.
+    # The default value is Issuer (i.e. a locally namespaced Issuer)
+    kind: ClusterIssuer
